@@ -54,7 +54,6 @@ const App = () => {
     <div className={styles.container}>
       <h1>Phonebook</h1>
       <ContactForm addContact={addContact} />
-
       <h2>Contacts</h2>
       <Filter value={filter} onChange={handleFilterChange} />
       <ContactList contacts={filteredContacts} onDelete={deleteContact} />

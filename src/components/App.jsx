@@ -6,7 +6,7 @@ import Filter from './components/Filter';
 import styles from './App.module.css';
 
 const App = () => {
-  // State to hold contacts and filter value
+ 
   const [contacts, setContacts] = useState([
     { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
     { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
@@ -15,7 +15,7 @@ const App = () => {
   ]);
   const [filter, setFilter] = useState('');
 
-  // Function to add a new contact
+ 
   const addContact = (newContact) => {
     const isDuplicate = contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
@@ -29,19 +29,18 @@ const App = () => {
     setContacts(prevContacts => [...prevContacts, { ...newContact, id: nanoid() }]);
   };
 
-  // Function to delete a contact
+ 
   const deleteContact = (contactId) => {
     setContacts(prevContacts =>
       prevContacts.filter(contact => contact.id !== contactId)
     );
   };
 
-  // Function to handle filter input changes
+ 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
 
-  // Function to filter contacts based on the filter value
   const getFilteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>

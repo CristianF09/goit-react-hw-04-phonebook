@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList';
@@ -6,17 +6,20 @@ import Filter from './components/Filter';
 import styles from './App.module.css';
 
 const App = () => {
-  const [contacts, setContacts] = useState([
-    { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
-    { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
-    { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
-    { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
-  ]);
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = localStorage.getItem('contacts');
+    return savedContacts ? JSON.parse(savedContacts) : [];
+  });
+  
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (newContact) => {
     const isDuplicate = contacts.some(
-      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+      (contact) => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
 
     if (isDuplicate) {
@@ -24,12 +27,13 @@ const App = () => {
       return;
     }
 
-    setContacts(prevContacts => [...prevContacts, newContact]);
+    const contactWithId = { ...newContact, id: nanoid() };
+    setContacts((prevContacts) => [...prevContacts, contactWithId]);
   };
 
   const deleteContact = (contactId) => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== contactId)
+    setContacts((prevContacts) =>
+      prevContacts.filter((contact) => contact.id !== contactId)
     );
   };
 
@@ -39,7 +43,7 @@ const App = () => {
 
   const getFilteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
+    return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
